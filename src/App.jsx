@@ -146,7 +146,7 @@ export default function App() {
       <ScorePopup scoreChange={lastScoreChange} visible={phase === 'correct' && lastScoreChange != null} />
       <SpeedPopup speedBonus={lastSpeedBonus} visible={phase === 'correct' && lastSpeedBonus != null} />
 
-      <div className="min-h-screen flex flex-col items-center px-4 py-4 sm:py-6 gap-3 sm:gap-4 max-w-lg mx-auto w-full safe-area-bottom">
+      <div className="min-h-svh sm:min-h-screen flex flex-col items-center px-4 py-4 sm:py-6 gap-3 sm:gap-4 max-w-lg mx-auto w-full pb-12 sm:pb-6">
         {isGameOver && <GameOver />}
 
         {phase === 'difficulty' && (
@@ -209,13 +209,15 @@ export default function App() {
 
             <TimerBar timeLeft={timeLeft} phase={phase} frozen={timerFrozen} />
 
-            {(phase === 'correct' || phase === 'wrong') && (
+            {(phase === 'correct' || phase === 'wrong') ? (
               <ResultBanner
                 phase={phase}
                 pokemon={pokemon}
                 scoreChange={lastScoreChange}
                 onNext={handleNext}
               />
+            ) : (
+              <div className="w-full max-w-md min-h-[108px]" aria-hidden="true" />
             )}
 
             <Silhouette
@@ -249,7 +251,7 @@ export default function App() {
         )}
       </div>
 
-      <footer className="pb-4 text-center safe-area-bottom">
+      <footer className="pb-4 text-center">
         <a
           href="https://nickovalentino.pages.dev"
           target="_blank"

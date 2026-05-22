@@ -33,8 +33,9 @@ body {
   background-image: radial-gradient(circle, var(--faint) 1px, transparent 1px);
   background-size: 20px 20px;
   color: var(--white);
-  min-height: 100vh;
+  min-height: 100dvh;
   font-family: 'Space Mono', monospace;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* ─── Utilities ──────────────────────────────────────────── */
@@ -167,13 +168,6 @@ button:focus-visible,
 /* ─── Keyboard-only hints: hide on touch devices ─────────── */
 @media (pointer: coarse) {
   .keyboard-only { display: none; }
-}
-
-/* ─── Safe area for mobile browsers ──────────────────────── */
-@supports (padding: env(safe-area-inset-bottom)) {
-  .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
 }
 
 /* ─── Reduced motion ─────────────────────────────────────── */
