@@ -199,12 +199,6 @@ const useGameStore = create((set, get) => ({
         })
       }
     })
-
-    const existing = loadScores(difficulty)
-    const entry = { name: trimmed, score, date: Date.now() }
-    const updated = [...existing, entry].sort((a, b) => b.score - a.score).slice(0, MAX_SCORES)
-    saveScores(difficulty, updated)
-    set({ scores: updated })
   },
 
   playAgain: () => {

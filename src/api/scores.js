@@ -1,9 +1,16 @@
 const API_BASE = '/api/scores'
 const TIMEOUT_MS = 5000
+const CACHE_TTL_MS = 300000
 
 const pending = new Map()
+const cache = new Map()
 
 export async function fetchScores(difficulty) {
+  const cached = cache.get(difficulty)
+  if (cached && Date.now() - cached.at < CACHE_TTL_MS) {
+    return cached.scores
+  }
+
   const key = `fetch:${difficulty}`
   if (pending.has(key)) return pending.get(key)
 
@@ -20,6 +27,7 @@ async function doFetch(difficulty) {
     const res = await fetch(`${API_BASE}?difficulty=${difficulty}`, { signal: controller.signal })
     if (!res.ok) return null
     const data = await res.json()
+    cache.set(difficulty, { scores: data.scores, at: Date.now() })
     return data.scores
   } catch {
     return null
@@ -39,6 +47,7 @@ export async function submitScore(name, score, difficulty) {
       body: JSON.stringify({ name, score, difficulty }),
       signal: controller.signal,
     })
+    if (res.ok) cache.delete(difficulty)
     return res.ok
   } catch {
     return false
