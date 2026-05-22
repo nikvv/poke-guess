@@ -169,6 +169,13 @@ button:focus-visible,
   .keyboard-only { display: none; }
 }
 
+/* ─── Safe area for mobile browsers ──────────────────────── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 /* ─── Reduced motion ─────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
