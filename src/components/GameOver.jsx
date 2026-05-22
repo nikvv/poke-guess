@@ -83,7 +83,7 @@ export default function GameOver() {
           <div className="text-center">
             <p className="font-pixel text-pixel-xs text-text-muted uppercase tracking-widest mb-1">Correct</p>
             <p className="font-display text-display-lg text-text-white leading-none">
-              {correctCount}<span className="font-mono text-sm text-text-muted">/{totalRounds}</span>
+              {correctCount}<span className="font-mono text-mono-lg text-text-muted">/{totalRounds}</span>
             </p>
           </div>
           <div className="text-center">

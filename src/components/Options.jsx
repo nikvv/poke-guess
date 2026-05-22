@@ -9,6 +9,7 @@ export default function Options({ options, phase, onSelect }) {
   const chosenAnswer = useGameStore((s) => s.chosenAnswer)
   const isGuessing = phase === 'guessing'
   const isDone = phase === 'correct' || phase === 'wrong'
+  const isDisabled = !isGuessing && !isDone
 
   return (
     <div className="w-full max-w-md flex flex-col gap-2">
@@ -45,6 +46,7 @@ export default function Options({ options, phase, onSelect }) {
                 text-left min-h-[52px] transition-colors truncate
                 ${borderColor} ${bgColor} ${shadow} ${textColor}
                 ${isGuessing ? 'cursor-pointer' : 'cursor-default'}
+                ${isDisabled ? 'opacity-50' : ''}
                 ${isDone && isChosen && !isCorrect ? 'animate-shake' : ''}
               `}
             >

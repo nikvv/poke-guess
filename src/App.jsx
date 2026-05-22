@@ -10,6 +10,7 @@ import ScoreBoard from './components/ScoreBoard'
 import ScorePopup from './components/ScorePopup'
 import SpeedPopup from './components/SpeedPopup'
 import ResultBanner from './components/ResultBanner'
+import ResultBar from './components/ResultBar'
 import MuteButton from './components/MuteButton'
 import PauseMenu from './components/PauseMenu'
 import TimerBar from './components/TimerBar'
@@ -21,17 +22,18 @@ export default function App() {
   const { difficulty, phase, paused, score, streak, highScore, hintsRevealed, pokemon, options, lastScoreChange, lastSpeedBonus, timeLeft, timerFrozen, hintCooldownUntil } = useGame()
   const { sfxMuted, toggleSFX, playEffect } = useSound()
 
-  const [imageLoaded, setImageLoaded] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
-  const prevPokemonId = useRef(null)
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches
+  )
   const prevStreak = useRef(0)
 
   useEffect(() => {
-    if (pokemon && pokemon.id !== prevPokemonId.current) {
-      setImageLoaded(false)
-      prevPokemonId.current = pokemon.id
-    }
-  }, [pokemon])
+    const mq = window.matchMedia('(max-width: 639px)')
+    const handler = (e) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   useEffect(() => {
     if (streak > 0 && streak !== prevStreak.current && streak % 5 === 0) {
@@ -67,7 +69,6 @@ export default function App() {
 
   const handleNext = useCallback(() => {
     nextRound()
-    setImageLoaded(false)
   }, [nextRound])
 
   const handleStart = useCallback(() => {
@@ -105,7 +106,6 @@ export default function App() {
 
   const isPlaying = phase === 'loading' || phase === 'guessing' || phase === 'correct' || phase === 'wrong'
   const isGameOver = phase === 'gameover'
-  const showControls = imageLoaded && phase !== 'loading'
 
   useEffect(() => {
     function onKey(e) {
@@ -145,6 +145,15 @@ export default function App() {
 
       <ScorePopup scoreChange={lastScoreChange} visible={phase === 'correct' && lastScoreChange != null} />
       <SpeedPopup speedBonus={lastSpeedBonus} visible={phase === 'correct' && lastSpeedBonus != null} />
+
+      {isMobile && (phase === 'correct' || phase === 'wrong') && (
+        <ResultBar
+          phase={phase}
+          pokemon={pokemon}
+          scoreChange={lastScoreChange}
+          onNext={handleNext}
+        />
+      )}
 
       <div className="min-h-svh sm:min-h-screen flex flex-col items-center px-4 py-4 sm:py-6 gap-3 sm:gap-4 max-w-lg mx-auto w-full pb-12 sm:pb-6">
         {isGameOver && <GameOver />}
@@ -209,44 +218,38 @@ export default function App() {
 
             <TimerBar timeLeft={timeLeft} phase={phase} frozen={timerFrozen} />
 
-            {(phase === 'correct' || phase === 'wrong') ? (
+            {!isMobile && (phase === 'correct' || phase === 'wrong') && (
               <ResultBanner
                 phase={phase}
                 pokemon={pokemon}
                 scoreChange={lastScoreChange}
                 onNext={handleNext}
               />
-            ) : (
-              <div className="w-full max-w-md min-h-[108px]" aria-hidden="true" />
             )}
 
             <Silhouette
               pokemon={pokemon}
               phase={phase}
               hintsRevealed={hintsRevealed}
-              onImageLoad={() => { setImageLoaded(true); setImageReady(true) }}
+              onImageLoad={() => { setImageReady(true) }}
             />
 
-            {showControls && (
-              <>
-                <div className="pokeball-divider w-full" aria-hidden="true" />
+            <div className="pokeball-divider w-full" aria-hidden="true" />
 
-                <HintBar
-                  pokemon={pokemon}
-                  hintsRevealed={hintsRevealed}
-                  score={score}
-                  phase={phase}
-                  onBuyHint={handleBuyHint}
-                  hintCooldownUntil={hintCooldownUntil}
-                />
+            <HintBar
+              pokemon={pokemon}
+              hintsRevealed={hintsRevealed}
+              score={score}
+              phase={phase}
+              onBuyHint={handleBuyHint}
+              hintCooldownUntil={hintCooldownUntil}
+            />
 
-                <Options
-                  options={options}
-                  phase={phase}
-                  onSelect={handleSelect}
-                />
-              </>
-            )}
+            <Options
+              options={options}
+              phase={phase}
+              onSelect={handleSelect}
+            />
           </div>
         )}
       </div>

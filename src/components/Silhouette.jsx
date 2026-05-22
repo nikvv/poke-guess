@@ -30,7 +30,7 @@ export default function Silhouette({ pokemon, phase, hintsRevealed, onImageLoad 
       return (
         <div className="flex flex-col items-center gap-3">
           <div
-            className="crt-panel w-64 h-64 md:w-72 md:h-72 flex flex-col items-center justify-center gap-3 px-6"
+            className="crt-panel w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 flex flex-col items-center justify-center gap-3 px-6"
             role="alert"
           >
             <p className="font-pixel text-pixel-xs text-text-muted text-center uppercase leading-relaxed">
@@ -52,7 +52,7 @@ export default function Silhouette({ pokemon, phase, hintsRevealed, onImageLoad 
 
     return (
       <div
-        className="crt-panel scanlines w-64 h-64 md:w-72 md:h-72 flex flex-col items-center justify-center gap-4"
+        className="crt-panel scanlines w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 flex flex-col items-center justify-center gap-4"
         role="status"
         aria-label="Loading next Pokemon"
       >
@@ -67,7 +67,7 @@ export default function Silhouette({ pokemon, phase, hintsRevealed, onImageLoad 
   if (!pokemon) {
     return (
       <div
-        className="crt-panel scanlines w-64 h-64 md:w-72 md:h-72 flex items-center justify-center"
+        className="crt-panel scanlines w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 flex items-center justify-center"
         role="img"
         aria-label="Pokemon silhouette hidden"
       >
@@ -110,7 +110,7 @@ export default function Silhouette({ pokemon, phase, hintsRevealed, onImageLoad 
     return (
       <div className="flex flex-col items-center gap-3">
         <div
-          className="crt-panel w-64 h-64 md:w-72 md:h-72 flex flex-col items-center justify-center gap-3 px-6"
+          className="crt-panel w-52 h-52 sm:w-64 sm:h-64 md:w-72 md:h-72 flex flex-col items-center justify-center gap-3 px-6"
           role="alert"
         >
           <p className="font-pixel text-pixel-xs text-text-muted text-center uppercase leading-relaxed">
@@ -138,7 +138,7 @@ export default function Silhouette({ pokemon, phase, hintsRevealed, onImageLoad 
         <img
           key={`${pokemon.id}-${retryKey}`}
           src={getSpriteUrl(pokemon.id)}
-          className={`w-56 h-56 md:w-64 md:h-64 object-contain pixelated transition-opacity duration-200 relative z-0 ${
+          className={`w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 object-contain pixelated transition-opacity duration-200 relative z-0 ${
             loaded ? 'opacity-100' : 'opacity-0'
           }`}
           style={{

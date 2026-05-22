@@ -36,7 +36,7 @@ export default function HintBar({ pokemon, hintsRevealed, score, onBuyHint, phas
 
   return (
     <div className="w-full max-w-md flex justify-center" role="group" aria-label="Hint skills">
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex sm:flex-col items-center gap-2">
 
         {/* Skill button */}
         <button
@@ -44,7 +44,7 @@ export default function HintBar({ pokemon, hintsRevealed, score, onBuyHint, phas
           disabled={disabled}
           aria-label={`BLUR hint${bought ? ', used' : onCooldown ? `, cooldown ${cooldownSecs}s` : canAfford ? `, costs ${currentCost} points` : ', insufficient points'}`}
           className={`
-            relative w-16 h-16 border-2 overflow-hidden
+            relative w-12 h-12 sm:w-16 sm:h-16 border-2 overflow-hidden
             flex items-center justify-center
             transition-colors duration-200
             ${bought
@@ -101,14 +101,14 @@ export default function HintBar({ pokemon, hintsRevealed, score, onBuyHint, phas
 
         {/* Cost / next cost label */}
         {!bought && (
-          <div className="flex flex-col items-center leading-none gap-0.5">
+          <div className="flex sm:flex-col items-center gap-1 sm:gap-0.5 leading-none">
             <span
-              className={`font-mono text-mono-xs ${isReady ? 'text-text-white' : 'text-hint-dim'}`}
+              className={`font-mono text-mono-sm ${isReady ? 'text-text-white' : 'text-text-white/60'}`}
             >
               −{currentCost}pt
             </span>
             {blurUseCount > 0 && (
-              <span className="font-mono text-mono-xs text-text-muted/50">
+              <span className="hidden sm:inline font-mono text-mono-xs text-text-muted/50">
                 next −{nextCost}
               </span>
             )}
