@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Generated data — progress file, not the checked-in output
+src/data/.pokemon_progress.json
+src/data/.pokemon_progress.json.bak
+
+# Critique / design artifacts persisted by `impeccable critique`
+.impeccable/
+
+# Agent / design context — not for public repo
+AGENTS.md
+PRODUCT.md
+
+# Agent tool config
+.opencode/
+
+# Cloudflare — contains D1 database credentials and local state
+wrangler.toml
+.wrangler/
+
+# Logs
+*.log
+npm-debug.log*

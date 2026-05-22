@@ -1,0 +1,15 @@
+# PokeGuess — Cloudflare Pages deployment
+# Copy this to wrangler.toml and fill in your database_id.
+#
+# In the Pages dashboard, add the D1 binding:
+# Settings > Functions > D1 Database Bindings
+# Variable name: poke_guess
+# D1 Database: poke-guess
+
+name = "poke-guess"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "poke_guess"
+database_name = "poke-guess"
+database_id = ""

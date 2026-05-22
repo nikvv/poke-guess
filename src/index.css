@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Space+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS custom properties ─────────────────────────────── */
+:root {
+  --bg:            #0C0C10;
+  --surface:       #14141E;
+  --surface-high:  #1C1C2C;
+  --red:           #CC0000;
+  --red-dark:      #7A0000;
+  --yellow:        #F5C400;
+  --yellow-dark:   #8A6E00;
+  --white:         #E8E8E0;
+  --muted:         #666677;
+  --faint:         #38384E;
+  --correct:       #22CC44;
+  --wrong:         #EE2233;
+  --border:        #2C2C3E;
+  --border-bright: #3E3E58;
+  --focus-ring:    #F5C400;
+  --hint-cyan:     #7DD3FC;
+  --hint-dim:      #555566;
+  --speed-glow:    #67E8F9;
+  --streak-gold:   #FBBF24;
+}
+
+/* ─── Base ───────────────────────────────────────────────── */
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, var(--faint) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: var(--white);
+  min-height: 100vh;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ─── Utilities ──────────────────────────────────────────── */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Scanlines overlay — apply to a relative-positioned container */
+.scanlines {
+  position: relative;
+}
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.18) 3px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Pixel button press — add to button, pair with active:pixel-press-none */
+.pixel-btn {
+  position: relative;
+  transition: transform 60ms ease, box-shadow 60ms ease;
+}
+.pixel-btn:active {
+  transform: translateY(4px);
+  box-shadow: none !important;
+}
+
+/* Pokeball divider */
+.pokeball-divider {
+  position: relative;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--red) 15%,
+    var(--red) 44%,
+    var(--bg) 44%,
+    var(--bg) 56%,
+    var(--red) 56%,
+    var(--red) 85%,
+    transparent 100%
+  );
+}
+.pokeball-divider::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--red);
+}
+
+/* CRT panel — used for silhouette container */
+.crt-panel {
+  background: var(--surface);
+  border: 3px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.crt-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--red);
+  z-index: 2;
+}
+
+/* ─── Float-up score animation ───────────────────────────── */
+@keyframes float-up {
+  0%   { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -48px) scale(1.3); }
+}
+.animate-float-up {
+  animation: float-up 0.9s ease-out forwards;
+}
+
+/* ─── Slide-down banner ──────────────────────────────────── */
+@keyframes slide-down {
+  0%   { opacity: 0; transform: translateY(-12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-down {
+  animation: slide-down 0.2s ease-out;
+}
+
+/* ─── Focus / accessibility ──────────────────────────────── */
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: 0;
+  background: var(--red);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  z-index: 9999;
+  font-weight: bold;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--white);
+}
+
+/* ─── Keyboard-only hints: hide on touch devices ─────────── */
+@media (pointer: coarse) {
+  .keyboard-only { display: none; }
+}
+
+/* ─── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
