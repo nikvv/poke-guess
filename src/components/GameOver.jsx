@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import useGameStore from '../store/gameStore'
 import { DIFFICULTY_LABELS } from '../utils/generations'
 
@@ -15,10 +15,10 @@ export default function GameOver() {
   const rank = scores.filter((s) => s.score > score).length + 1
   const isTopThree = rank <= 3 && score > 0
   const canSave = score > 0
-  const [showSave, setShowSave] = useState(false)
   const [name, setName] = useState('')
   const [saved, setSaved] = useState(false)
   const [displayScore, setDisplayScore] = useState(0)
+  const inputRef = useRef(null)
 
   useEffect(() => {
     if (score === 0) { setDisplayScore(0); return }
@@ -34,6 +34,13 @@ export default function GameOver() {
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
   }, [score])
+
+  useEffect(() => {
+    if (canSave && !saved && inputRef.current) {
+      const timer = setTimeout(() => inputRef.current?.focus(), 1500)
+      return () => clearTimeout(timer)
+    }
+  }, [canSave, saved])
 
   const handleSave = () => {
     submitHighScore(name)
@@ -99,54 +106,54 @@ export default function GameOver() {
         </div>
       )}
 
-      {canSave && !saved && !showSave && (
-        <button
-          onClick={() => setShowSave(true)}
-          className="pixel-btn border-[3px] border-brand-yellow text-brand-yellow font-pixel text-pixel-xs px-6 py-3 tracking-widest hover:bg-brand-yellow/10 transition-colors shadow-pixel-yellow"
-        >
-          SAVE SCORE
-          {isTopThree && <span className="ml-2">★</span>}
-        </button>
-      )}
-
-      {showSave && !saved && (
-        <div className="w-full flex flex-col gap-3 animate-fade-in">
-          {isTopThree && (
-            <div className="border-[2px] border-brand-yellow px-4 py-2 text-center animate-pop-in">
-              <p className="font-pixel text-brand-yellow text-pixel-xs">
-                ★ NEW {RANK_MEDALS[rank - 1]} PLACE ★
+      {canSave && (
+        <div className="w-full animate-fade-in">
+          {!saved ? (
+            <div className="flex flex-col gap-3">
+              {isTopThree && (
+                <div className="border-[2px] border-brand-yellow px-4 py-2 text-center animate-pop-in">
+                  <p className="font-pixel text-brand-yellow text-pixel-xs">
+                    ★ NEW {RANK_MEDALS[rank - 1]} PLACE ★
+                  </p>
+                </div>
+              )}
+              <div className="border-[3px] border-border bg-surface px-4 py-4">
+                <label htmlFor="player-name" className="block font-pixel text-text-muted uppercase text-pixel-xs tracking-wider mb-3">
+                  ENTER YOUR NAME
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    ref={inputRef}
+                    id="player-name"
+                    type="text"
+                    maxLength={12}
+                    value={name}
+                    onChange={(e) => setName(e.target.value.toLocaleUpperCase().replace(/[^\p{L}\p{N}]/gu, '').slice(0, 12))}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleSave() }}
+                    placeholder="PLAYER"
+                    className="flex-1 font-mono text-text-white bg-surface-high border-[2px] border-border-bright px-3 py-3 focus:border-brand-yellow focus:outline-none uppercase tracking-widest text-mono-lg rounded-none placeholder:text-text-faint"
+                    aria-label="Player name for high score (max 12 characters)"
+                  />
+                  <button
+                    onClick={handleSave}
+                    className="pixel-btn border-[3px] border-brand-red bg-brand-red text-text-white font-pixel px-4 py-3 text-pixel-xs tracking-widest hover:bg-brand-red/90 transition-colors shadow-pixel-red"
+                  >
+                    SAVE
+                  </button>
+                </div>
+                <p className="keyboard-only font-mono text-text-muted text-mono-xs mt-2 text-center">
+                  Press <kbd className="px-1 border border-text-muted/40">ENTER</kbd> to save
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="border-[3px] border-correct border-dashed px-4 py-3 text-center animate-pop-in">
+              <p className="font-pixel text-correct text-pixel-xs tracking-widest">
+                ★ SAVED AS <span className="text-text-white">{name || 'PLAYER'}</span> ★
               </p>
             </div>
           )}
-          <label htmlFor="player-name" className="font-pixel text-text-muted uppercase text-pixel-xs tracking-wider">
-            ENTER YOUR NAME
-          </label>
-          <div className="flex gap-2">
-            <input
-              id="player-name"
-              type="text"
-              maxLength={12}
-              value={name}
-              onChange={(e) => setName(e.target.value.toLocaleUpperCase().replace(/[^\p{L}\p{N}]/gu, '').slice(0, 12))}
-              onKeyDown={(e) => { if (e.key === 'Enter') handleSave() }}
-              placeholder="PLAYER"
-              className="flex-1 font-mono text-text-white bg-surface border-[2px] border-border px-3 py-2 focus:border-brand-yellow focus:outline-none uppercase tracking-widest text-mono-lg"
-              aria-label="Player name for high score (max 12 characters)"
-            />
-            <button
-              onClick={handleSave}
-              className="pixel-btn border-[3px] border-brand-yellow text-brand-yellow font-pixel px-3 py-2 text-pixel-xs shadow-pixel-yellow hover:bg-brand-yellow/10 transition-colors"
-            >
-              OK
-            </button>
-          </div>
         </div>
-      )}
-
-      {saved && (
-        <p className="font-mono text-text-muted text-mono-sm tracking-widest animate-fade-in">
-          SAVED AS {name || 'PLAYER'}
-        </p>
       )}
 
       {top3.length > 0 && (
